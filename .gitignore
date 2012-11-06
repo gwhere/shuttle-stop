@@ -1,0 +1,7 @@
+cache
+databases
+errors
+sessions
+
+private
+progress.log

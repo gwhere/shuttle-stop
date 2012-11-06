@@ -1,0 +1,36 @@
+{{right_sidebar_enabled,left_sidebar_enabled=False,('message' in globals())}}
+{{response.title='All'}}
+{{extend 'layout.html'}}
+
+<table>
+    {{a=1}}
+    {{items_per_row=3}}
+<tr>
+{{while a <= 12:}}
+    {{=listing}}
+    {{if a%items_per_row == 0:}}
+    	</tr><tr>
+    {{pass}}
+    {{a+=1}}
+{{pass}}
+    </tr>
+</table>
+
+{{block left_sidebar}}
+
+<h6>{{=T("Boards")}}</h6>
+<table>
+    <tr><td><a href="index">All</a></td></tr>
+    <tr><td><a href="http://web2py.com">Textbook Exchange</a></td></tr>
+  	<tr><td><a href="http://web2py.com">Ride Share</a></td></tr>
+  	<tr><td><a href="http://web2py.com">Campus Groups</a></td></tr>
+  	<tr><td><a href="http://web2py.com">Organizations</a></td></tr>
+  	<tr><td><a href="http://web2py.com">Housing</a></td></tr>
+  	<tr><td><a href="http://web2py.com">Services</a></td></tr>
+    <tr><td>{{=A(T("Sale & Trade"), _href=URL('examples','default','index'))}}</td></tr>
+  	<tr><td><a href="http://web2py.com">misc.</a></td></tr>
+  	<tr><td><br><a href="http://web2py.com/book">{{=T('Help')}}</a></td></tr>
+</table>
+{{end}}
+
+    <a href="index">1</a>  <a href="index"><u>&lt;</u></a>  <a href="index"><u>1</u></a>  <a href="index"><u>&gt;</u></a>  <a href="index">1</a>
