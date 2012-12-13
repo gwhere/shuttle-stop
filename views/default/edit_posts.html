@@ -1,0 +1,28 @@
+{{left_sidebar_enabled=True,('message' in globals())}}
+{{extend 'layout.html'}}
+<h5>My Posts</h5>
+<table>
+{{for post in myposts:}}
+    <tr>
+        <td>{{=A(post.title, _href=URL('edit_post', args=[post.id]))}}</td>
+        <td>- posted {{=post.post_date}}</td>
+        <td>- expires {{=post.remove_date}}</td>
+    </tr>
+    {{pass}}
+</table>
+
+{{block left_sidebar}}
+
+<h6>{{=T("Boards")}}</h6>
+
+<table>  
+    <tr><td>{{=A('All', _href=URL('index/all'))}}</td></tr>
+    {{i = 2}}
+    {{while i < 10:}}
+    	<tr><td>{{=A(CATEGORIES[i], _href=URL('index/'+CATS[i-1]))}}</td></tr>
+    {{i+=1}}
+    {{pass}}
+  	<tr><td><br>{{=A('Post Listing', _href=URL('add'))}}</td></tr>
+  	<tr><td><br>{{=A('My Posts', _href=URL('edit_posts'))}}</td></tr>
+</table>
+{{end}}

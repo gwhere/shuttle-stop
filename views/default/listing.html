@@ -1,0 +1,27 @@
+{{left_sidebar_enabled=True,('message' in globals())}}
+{{response.title=listing.title}}
+{{response.subtitle = T('')}}
+{{extend 'layout.html'}}
+
+<table>
+    <tr><td>Posted by:</td><td>{{=username}}</td></tr>
+<tr><td>Description:</td><td>{{=listing.description}}</td></tr>
+    <tr><td>Contact:</td><td>{{=A(email, _href='mailto:'+email)}}</td></tr>
+</table>
+
+<img src={{=URL('download', args=[listing.image])}} />
+
+{{block left_sidebar}}
+
+<h6>{{=T("Boards")}}</h6>
+<table>
+    <tr><td>{{=A('All', _href=URL('index/all'))}}</td></tr>
+    {{i = 2}}
+    {{while i < 10:}}
+    	<tr><td>{{=A(CATEGORIES[i], _href=URL('index/'+CATS[i-1]))}}</td></tr>
+    {{i+=1}}
+    {{pass}}
+  	<tr><td><br>{{=A('Post Listing', _href=URL('add'))}}</td></tr>
+  	<tr><td><br>{{=A('My Posts', _href=URL('edit_posts'))}}</td></tr>
+</table>
+{{end}}
