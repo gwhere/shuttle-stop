@@ -29,6 +29,15 @@ div.listing_cell
         height:175px;
         background:beige;
     }
+img
+    {
+        position:fixed;
+        max-width:288px;
+        max-height:150px;
+        margin-top:4px;
+        margin-left:6px;
+    }
+
 </style>
 </head>
 
@@ -41,13 +50,17 @@ div.listing_cell
 {{contact=P('')}}
 {{for listing in listings:}}
     {{desc=listing.description}}
-    {{desc_div=DIV(P(desc))}}
-    {{if len(desc)>200:}}
-    	{{desc_div=DIV(P(desc[:200]+'... ', A('more', _href=URL('listing/'+str(listing.id)))))}}
+    {{title=listing.title}}
+    {{if len(title)>32:}}
+    	{{title=title[:30]+'...'}}
     {{pass}}
-    
-    
-    {{contact=A('Contact me!', _href=URL('listing/'+str(listing.id)))}}
+    {{desc_div=DIV(H5(' '), P(' '), T(' '))}}
+    {{if not listing.image:}}
+        {{desc_div=DIV(H5(title), P(desc))}}
+        {{if len(desc)>200:}}
+                {{desc_div=DIV(H5(title), P(desc[:200]+'... ', A('more', _href=URL('listing/'+str(listing.id)))))}}
+        {{pass}}
+    {{pass}}
     
     {{days=(datetime.utcnow()-listing.post_date).days}}
     
@@ -59,7 +72,12 @@ div.listing_cell
     	{{age=str(days)+' days ago'}}
     {{pass}}
     
-    {{=TD(DIV(DIV(H5(listing.title), desc_div, 'posted '+age+' -- ', contact, _style='position:relative; left:6px; top:4px; width:288px;'), _class='listing_cell'))}}
+    {{contact=DIV('posted '+age+' -- ', A('Contact me!', _href=URL('listing/'+str(listing.id))), _style='position:absolute; top:150px;')}}
+    
+    <td><div class='listing_cell'>
+        <a href={{=URL('listing/'+str(listing.id))}}><img src={{=URL('download', args=[listing.image])}}/></a>
+    	{{=DIV(desc_div, contact, _style='position:relative; left:6px; top:4px; width:288px;')}}
+    </div></td>
     {{if a%items_per_row == 0:}}
     	</tr><tr>
     {{pass}}
