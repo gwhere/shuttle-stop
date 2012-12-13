@@ -1,36 +1,107 @@
 {{right_sidebar_enabled,left_sidebar_enabled=False,('message' in globals())}}
-{{response.title='All'}}
+{{response.title=category}}
 {{extend 'layout.html'}}
+<head>
+<style>
+div.arrows
+	{
+		position:absolute;
+        bottom:-140px;
+        padding:50px;
+        left:360px;
+	}
+div.board
+	{
+		position:relative;
+		left:-80px;
+		width:800px;
+        height:500px;
+        top:-40px;
+	}
+table.listing_table
+    {
+        width:900px;
+        height:500px;
+    }
+div.listing_cell
+    {
+        width:300px;
+        height:175px;
+        background:beige;
+    }
+</style>
+</head>
 
-<table>
+<div class="board">
+    <table class="listing_table">
     {{a=1}}
     {{items_per_row=3}}
+    {{row=0}}
 <tr>
-{{while a <= 12:}}
-    {{=listing}}
+{{contact=P('')}}
+{{for listing in listings:}}
+    {{desc=listing.description}}
+    {{desc_div=DIV(P(desc))}}
+    {{if len(desc)>200:}}
+    	{{desc_div=DIV(P(desc[:200]+'... ', A('more', _href=URL('listing/'+str(listing.id)))))}}
+    {{pass}}
+    
+    
+    {{contact=A('Contact me!', _href=URL('listing/'+str(listing.id)))}}
+    
+    {{days=(datetime.utcnow()-listing.post_date).days}}
+    
+    {{if days == 0:}}
+    	{{age='today'}}
+    {{elif days == 1:}}
+    	{{age='yesterday'}}
+    {{else:}}
+    	{{age=str(days)+' days ago'}}
+    {{pass}}
+    
+    {{=TD(DIV(DIV(H5(listing.title), desc_div, 'posted '+age+' -- ', contact, _style='position:relative; left:6px; top:4px; width:288px;'), _class='listing_cell'))}}
     {{if a%items_per_row == 0:}}
     	</tr><tr>
     {{pass}}
     {{a+=1}}
+    {{row+=1}}
+    {{if row == 9:}}
+    	{{break}}
+    {{pass}}
 {{pass}}
     </tr>
 </table>
 
+<div class="arrows">
+{{if page_num > 1:}}
+    <a href="1">1</a>
+	<a href={{=T(str(page_num - 1))}}><u style='position:relative; bottom:2px; margin-left:10px; margin-right:10px'>&lt;</u></a>
+{{else:}}
+	1 <u style='position:relative; bottom:2px; margin-left:10px; margin-right:10px'>&lt;</u>
+{{pass}}
+{{=page_num}}
+{{if page_num < page_length:}}
+	<a href={{=T(str(page_num + 1))}}><u style='position:relative; bottom:2px; margin-left:10px; margin-right:10px'>&gt;</u></a>
+	<a href={{=T(str(page_length))}}>{{=page_length}}</a>
+{{else:}}
+    <u style='position:relative; bottom:2px; margin-left:10px; margin-right:10px'>&gt;</u> {{=page_length}}
+{{pass}}
+</div>
+</div>
+
 {{block left_sidebar}}
 
 <h6>{{=T("Boards")}}</h6>
+
 <table>
-    <tr><td><a href="index">All</a></td></tr>
-    <tr><td><a href="http://web2py.com">Textbook Exchange</a></td></tr>
-  	<tr><td><a href="http://web2py.com">Ride Share</a></td></tr>
-  	<tr><td><a href="http://web2py.com">Campus Groups</a></td></tr>
-  	<tr><td><a href="http://web2py.com">Organizations</a></td></tr>
-  	<tr><td><a href="http://web2py.com">Housing</a></td></tr>
-  	<tr><td><a href="http://web2py.com">Services</a></td></tr>
-    <tr><td>{{=A(T("Sale & Trade"), _href=URL('examples','default','index'))}}</td></tr>
-  	<tr><td><a href="http://web2py.com">misc.</a></td></tr>
-  	<tr><td><br><a href="http://web2py.com/book">{{=T('Help')}}</a></td></tr>
+    {{=search}}
+    <tr><td>{{=A('All', _href=URL('index/all'))}}</td></tr>
+    {{i = 2}}
+    {{while i < 10:}}
+    	<tr><td>{{=A(CATEGORIES[i], _href=URL('index/'+CATS[i-1]))}}</td></tr>
+    {{i+=1}}
+    {{pass}}
+  	<tr><td><br>{{=A('Post Listing', _href=URL('add'))}}</td></tr>
+  	<tr><td><br>{{=A('My Posts', _href=URL('edit_posts'))}}</td></tr>
 </table>
 {{end}}
-
-    <a href="index">1</a>  <a href="index"><u>&lt;</u></a>  <a href="index"><u>1</u></a>  <a href="index"><u>&gt;</u></a>  <a href="index">1</a>
